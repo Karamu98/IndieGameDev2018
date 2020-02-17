@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Campfire : MonoBehaviour
+public class LightFlicker : MonoBehaviour
 {
     [SerializeField] Light m_sourceLight;
 

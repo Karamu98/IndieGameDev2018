@@ -92,9 +92,10 @@ namespace Game
             }
             m_magicTimer = m_magicCooldown;
             GameObject spell = Instantiate(m_baseSpell, transform.position, transform.rotation);
-            spell.GetComponent<Projectile>().SetCaster(this);
-            spell.GetComponent<Projectile>().SetDamage(m_damage);
-            spell.GetComponent<Projectile>().Launch();
+            Projectile proj = spell.GetComponent<Projectile>();
+            proj.Init(this);
+            proj.SetDamage(m_damage);
+            proj.Launch();
 
             return true;
         }
@@ -199,10 +200,11 @@ namespace Game
                 if(IsMoving)
                 {
                     m_moveProgress = Mathf.Clamp01(m_moveProgress + (m_speed * Time.deltaTime));
-                    m_viewObj.transform.position = Vector3.Slerp(m_startPos, m_destPos, m_moveProgress);
+                    m_viewObj.transform.position = Vector3.Lerp(m_startPos, m_destPos, m_moveProgress);
 
                     if (m_moveProgress == 1.0f)
                     {
+                        m_viewObj.transform.position = Core.Utilities.Math.RoundToInt(m_destPos);
                         IsMoving = false;
                         m_startPos = m_destPos;
                         m_moveProgress = 0.0f;
@@ -212,10 +214,11 @@ namespace Game
                 if(IsRotating)
                 {
                     m_rotProgress = Mathf.Clamp01(m_rotProgress + (m_rotSpeed * Time.deltaTime));
-                    m_viewObj.transform.rotation = Quaternion.Slerp(m_startRot, m_destRot, m_rotProgress);
+                    m_viewObj.transform.rotation = Quaternion.Lerp(m_startRot, m_destRot, m_rotProgress);
 
                     if(m_rotProgress == 1.0f)
                     {
+                        m_viewObj.transform.rotation = Quaternion.Euler(Core.Utilities.Math.RoundToInt(m_destRot.eulerAngles));
                         IsRotating = false;
                         m_startRot = m_destRot;
                         m_rotProgress = 0.0f;

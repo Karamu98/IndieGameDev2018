@@ -252,9 +252,8 @@ namespace Game
                 {
                     s_navMesh[x, y] = new PathNode
                     {
-                        iXPos = x,
-                        iYPos = y,
-                        worldPos = new Vector3(s_GridCellSize * x, -(s_GridCellSize * 0.5f), s_GridCellSize * y)
+                        GridPosition = new Vector2Int(x, y),
+                        WorldPos = new Vector3(s_GridCellSize * x, -(s_GridCellSize * 0.5f), s_GridCellSize * y)
                     };
 
                     if (a_cells[x, y].Type != LevelGeneration.CellType.EMPTY)
@@ -283,7 +282,7 @@ namespace Game
                 PathNode currentNode = OpenList[0];
                 for (int i = 1; i < OpenList.Count; i++)
                 {
-                    if (OpenList[i].iFCost < currentNode.iFCost || OpenList[i].iFCost == currentNode.iFCost && OpenList[i].iHCost < currentNode.iHCost)
+                    if (OpenList[i].FCost < currentNode.FCost || OpenList[i].FCost == currentNode.FCost && OpenList[i].HCost < currentNode.HCost)
                     {
                         currentNode = OpenList[i];
                     }
@@ -298,7 +297,7 @@ namespace Game
                     if (path.Count <= 0)
                     {
                         Vector3 pos = NodeToWorld(endNode);
-                        return new Vector4(pos.x, -1, pos.z, endNode.iFCost);
+                        return new Vector4(pos.x, -1, pos.z, endNode.FCost);
                     }
                     return NodeToWorld(path[0]);
                 }
@@ -312,7 +311,7 @@ namespace Game
                         if (path.Count <= 0)
                         {
                             Vector3 pos = NodeToWorld(endNode);
-                            return new Vector4(pos.x, -1, pos.z, endNode.iFCost);
+                            return new Vector4(pos.x, -1, pos.z, endNode.FCost);
                         }
                         return NodeToWorld(path[0]);
                     }
@@ -322,12 +321,12 @@ namespace Game
                         continue;
                     }
 
-                    int moveCost = currentNode.iGCost + GetManDistance(currentNode, NeighborNode);
+                    int moveCost = currentNode.GCost + GetManDistance(currentNode, NeighborNode);
 
-                    if (moveCost < NeighborNode.iGCost || !OpenList.Contains(NeighborNode))
+                    if (moveCost < NeighborNode.GCost || !OpenList.Contains(NeighborNode))
                     {
-                        NeighborNode.iGCost = moveCost;
-                        NeighborNode.iHCost = GetManDistance(NeighborNode, endNode);
+                        NeighborNode.GCost = moveCost;
+                        NeighborNode.HCost = GetManDistance(NeighborNode, endNode);
                         NeighborNode.Parent = currentNode;
 
                         if (!OpenList.Contains(NeighborNode))
@@ -344,8 +343,8 @@ namespace Game
 
         private static int GetManDistance(PathNode a_nodeA, PathNode a_nodeB)
         {
-            int ix = Math.Abs(a_nodeA.iXPos - a_nodeB.iXPos);
-            int iy = Math.Abs(a_nodeA.iYPos - a_nodeB.iYPos);
+            int ix = Math.Abs(a_nodeA.GridPosition.x - a_nodeB.GridPosition.x);
+            int iy = Math.Abs(a_nodeA.GridPosition.y - a_nodeB.GridPosition.y);
 
             return ix + iy;
         }
@@ -357,8 +356,8 @@ namespace Game
             int xCheck, yCheck;
 
             // Right Side
-            xCheck = a_start.iXPos + 1;
-            yCheck = a_start.iYPos;
+            xCheck = a_start.GridPosition.x + 1;
+            yCheck = a_start.GridPosition.y;
             if (xCheck >= 0 && xCheck < s_navMesh.GetLength(0))
             {
                 if (yCheck >= 0 && yCheck < s_navMesh.GetLength(1))
@@ -368,8 +367,8 @@ namespace Game
             }
 
             // Left Side
-            xCheck = a_start.iXPos - 1;
-            yCheck = a_start.iYPos;
+            xCheck = a_start.GridPosition.x - 1;
+            yCheck = a_start.GridPosition.y;
             if (xCheck >= 0 && xCheck < s_navMesh.GetLength(0))
             {
                 if (yCheck >= 0 && yCheck < s_navMesh.GetLength(1))
@@ -379,8 +378,8 @@ namespace Game
             }
 
             // Above
-            xCheck = a_start.iXPos;
-            yCheck = a_start.iYPos + 1;
+            xCheck = a_start.GridPosition.x;
+            yCheck = a_start.GridPosition.y + 1;
             if (xCheck >= 0 && xCheck < s_navMesh.GetLength(0))
             {
                 if (yCheck >= 0 && yCheck < s_navMesh.GetLength(1))
@@ -390,8 +389,8 @@ namespace Game
             }
 
             // Below
-            xCheck = a_start.iXPos;
-            yCheck = a_start.iYPos - 1;
+            xCheck = a_start.GridPosition.x;
+            yCheck = a_start.GridPosition.y - 1;
             if (xCheck >= 0 && xCheck < s_navMesh.GetLength(0))
             {
                 if (yCheck >= 0 && yCheck < s_navMesh.GetLength(1))
@@ -425,14 +424,14 @@ namespace Game
         {
             Vector4 result = new Vector4();
 
-            int ixPos = Mathf.RoundToInt(a_node.iXPos * s_GridCellSize);
-            int iyPos = Mathf.RoundToInt(a_node.iYPos * s_GridCellSize);
+            int ixPos = Mathf.RoundToInt(a_node.GridPosition.x * s_GridCellSize);
+            int iyPos = Mathf.RoundToInt(a_node.GridPosition.y * s_GridCellSize);
 
 
             result.x = ixPos;
             result.y = -1;
             result.z = iyPos;
-            result.w = a_node.iFCost;
+            result.w = a_node.FCost;
 
             return result;
         }

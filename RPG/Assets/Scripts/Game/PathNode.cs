@@ -4,16 +4,15 @@ using UnityEngine;
 
 public class PathNode
 {
-    public int iXPos;
-    public int iYPos;
+    public Vector2Int GridPosition;
 
-    public Vector3 worldPos;
+    public Vector3 WorldPos;
 
     public bool IsWall;
 
     public PathNode Parent;
 
-    public int iGCost; // Distance from start
-    public int iHCost; // Manhatten distance from end node
-    public int iFCost { get { return iGCost + iHCost; } } // "Cost"
+    public int GCost; // Distance from start
+    public int HCost; // Manhatten distance from end node
+    public int FCost { get { return GCost + HCost; } } // "Cost"
 }

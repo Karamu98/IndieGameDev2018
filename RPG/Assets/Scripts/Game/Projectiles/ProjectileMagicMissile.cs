@@ -6,7 +6,9 @@ namespace Game
 {
     public class ProjectileMagicMissile : Projectile
     {
-        [SerializeField] AudioSource m_audioSource;
+        [SerializeField] ParticleSystem m_particleSystem = default;
+        [SerializeField] AudioSource m_audioSource = default;
+        [SerializeField] Light m_projectileLight = default;
 
         [SerializeField] float m_lingerTime = 1.0f;
         float m_lingerTimer = 0.0f;
@@ -19,6 +21,8 @@ namespace Game
         protected override void OnHit(Character other)
         {
             m_audioSource.Play();
+            m_particleSystem.Stop();
+            m_projectileLight.enabled = false;
         }
 
         private void Update()
@@ -28,7 +32,7 @@ namespace Game
                 m_lingerTimer -= Time.deltaTime;
                 if(m_lingerTimer <= 0.0f)
                 {
-
+                    Destroy(gameObject);
                 }
             }
         }

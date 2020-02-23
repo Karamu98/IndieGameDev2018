@@ -8,15 +8,14 @@ namespace Game
     public abstract class Projectile : MonoBehaviour
     {
         [SerializeField] GameObject m_viewObj               = default;
-        [SerializeField] ParticleSystem m_particleSystem    = default;
-        [SerializeField] float m_speed                      = 0.5f;
+        [SerializeField] protected float m_speed            = 0.5f;
+        [SerializeField] protected float m_damage           = 0.0f;
         [SerializeField] CallbackCollider m_collider        = default;
 
         protected bool IsLaunched { get; private set; } = false;
         protected bool HasCollided { get; private set; } = false;
-        Character m_caster;
-        float m_damage = 0.0f;
 
+        Character m_caster;
 
         protected virtual void OnLaunch() { }
         protected virtual void OnHit(Character other) { }

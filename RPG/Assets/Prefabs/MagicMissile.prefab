@@ -144,10 +144,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_viewObj: {fileID: 1720901640049386}
-  m_particleSystem: {fileID: 7346922565865554832}
   m_speed: 5
   m_collider: {fileID: 3249495635279489174}
+  m_particleSystem: {fileID: 7346922565865554832}
   m_audioSource: {fileID: 82429878336196844}
+  m_projectileLight: {fileID: 2317607151024249963}
   m_lingerTime: 1
 --- !u!1 &1720901640049386
 GameObject:
